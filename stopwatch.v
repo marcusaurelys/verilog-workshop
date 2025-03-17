@@ -2,23 +2,7 @@ module Stopwatch(clk, start_stop, reset, digit1, digit2);
     input wire clk, start_stop, reset;
     output wire [6:0] digit1, digit2;
     
-    // JK Flip-Flop logic for clock control
-    wire j, k, q;
-    assign j = start_stop & ~reset;
-    assign k = start_stop | reset;
-    JKFlipFlop JK(j, k, clk, q);
-
-    // Counter logic
-    wire [6:0] count;
-    Counter c(q, reset, count);
-
-    // Binary to BCD conversion
-    wire [3:0] bcd1, bcd2;
-    BinaryToBCD converter(count, bcd1, bcd2);
-
-    // BCD to Seven Segment Display conversion
-    SevenSegDisplay sg1(bcd1, digit1);
-    SevenSegDisplay sg2(bcd2, digit2);
+    //TODO: Using Structural Level Modeling, connect all the modules to create the stopwatch.
 endmodule
 
 // Counter Module
@@ -26,12 +10,8 @@ module Counter(q, reset, count);
     input wire q, reset;
     output reg [6:0] count;
 
-    always @(posedge q or posedge reset) begin
-        if (reset)
-            count <= 7'b0000000;
-        else if (q)
-            count <= (count == 99) ? 0 : count + 1;
-    end
+    //TODO: Using any type of modeling, define the logic for a counter that can count up to 99.
+
 endmodule
 
 // Convert binary to two-digit BCD
@@ -39,16 +19,17 @@ module BinaryToBCD(counter, digit1, digit2);
     input wire [6:0] counter;
     output reg [3:0] digit1, digit2;
 
-    always @(*) begin
-        digit1 = counter % 10; // Ones place
-        digit2 = counter / 10; // Tens place
-    end
+    //TODO: Using Structural Level Modeling, model the logic for this module. Feel free to define submodules as needed
+
 endmodule
+
 
 // Convert BCD to Seven Segment Display
 module SevenSegDisplay(bcd, sevseg);
     input wire [3:0] bcd;
     output reg [6:0] sevseg;
+
+    //QUESTION: What kind of modelling is this?
 
     always @(*) begin
         case (bcd)
@@ -72,12 +53,5 @@ module JKFlipFlop(j, k, clk, q);
     input wire j, k, clk;
     output reg q;
 
-    always @(posedge clk) begin
-        if(j & ~k)
-            q <= 1;
-        else if (k & ~j)
-            q <= 0;
-        else if (j & k)
-            q <= ~q;
-    end
+    //TODO: Using Behavioral Modelling, Model the behavior of a JK Flipflop
 endmodule

@@ -19,8 +19,9 @@ module Stopwatch_tb;
     );
 
     initial begin
-        clk = 0;
-        forever #500 clk = ~clk;
+        /*
+        TODO: Initialize a clock with a cycle rate of 1000 ns.
+        */
     end
 
     initial begin
@@ -37,7 +38,7 @@ module Stopwatch_tb;
 
         // Pause the stopwatch
         start_stop = 0;
-        repeat (5) @(posedge clk); // Wait 5 cycles
+        repeat (10) @(posedge clk); // Wait 5 cycles
 
         // Resume the stopwatch
         start_stop = 1;
@@ -50,7 +51,7 @@ module Stopwatch_tb;
 
         reset = 0;
         #1000;
-        repeat (5) @(posedge clk);
+        repeat (6) @(posedge clk);
 
         $finish;
     end
