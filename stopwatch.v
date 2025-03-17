@@ -37,12 +37,40 @@ endmodule
 // Convert binary to two-digit BCD
 module BinaryToBCD(counter, digit1, digit2);
     input wire [6:0] counter;
-    output reg [3:0] digit1, digit2;
+    output wire [3:0] digit1, digit2;
 
-    always @(*) begin
-        digit1 = counter % 10; // Ones place
-        digit2 = counter / 10; // Tens place
-    end
+    wire [3:0] C1_out;
+    BCDAdjust C1({2'b00, counter[6:5]}, C1_out);
+
+    wire [3:0] C2_out;
+    BCDAdjust C2({C1_out[2:0], counter[4]}, C2_out);
+
+    wire [3:0] C3_out;
+    BCDAdjust C3({C2_out[2:0], counter[3]}, C3_out);
+
+    wire [3:0] C4_out;
+    BCDAdjust C4({C3_out[2:0], counter[2]}, C4_out);
+
+    wire [3:0] C5_out;
+    BCDAdjust C5({C4_out[2:0], counter[1]}, C5_out);
+
+    wire [3:0] C6_out;
+    BCDAdjust C6({1'b0, C1_out[3], C2_out[3], C3_out[3]}, C6_out);
+
+    wire [3:0] C7_out;
+    BCDAdjust C7({C6_out[2:0], C4_out[3]}, C7_out);
+
+    assign digit1 = {C5_out[2:0], counter[0]};
+    assign digit2 = {C7_out[2:0], C5_out[3]};
+
+endmodule
+
+module BCDAdjust(in, out);
+    input wire [3:0] in;
+    output wire [3:0] out;
+
+    assign out = (in > 4) ? (in + 3) : in; 
+
 endmodule
 
 // Convert BCD to Seven Segment Display
