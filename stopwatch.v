@@ -1,5 +1,3 @@
-`timescale 1ns/1ps
-
 module Stopwatch(clk, start_stop, reset, digit1, digit2);
     input wire clk, start_stop, reset;
     output wire [6:0] digit1, digit2;
@@ -31,8 +29,8 @@ module Counter(q, reset, count);
     always @(posedge q or posedge reset) begin
         if (reset)
             count <= 7'b0000000;
-        else 
-            count <= count + 1;
+        else if (q)
+            count <= (count == 99) ? 0 : count + 1;
     end
 endmodule
 
@@ -69,7 +67,7 @@ module SevenSegDisplay(bcd, sevseg);
     end
 endmodule
 
-// JK Flipflop with Reset
+// JK Flipflop 
 module JKFlipFlop(j, k, clk, q);
     input wire j, k, clk;
     output reg q;
